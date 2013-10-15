@@ -1,0 +1,36 @@
+{
+    // Required
+    "name": "paintover",
+    "manifest_version": 2,
+    "version": "0.1",
+
+    // Recommended
+    "description": "paintover - description",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "page_action": {
+        "default_icon": "icon.png",
+        "default_title": "paintover - default title"
+    },
+    "permissions": [
+        "webRequest",
+        "*://*.google.com/"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            // "exclude_globs":  ["*://*google.*/search*"],
+            "js": ["contentscript.js"],
+            "css": ["content.css"],
+            "run_at": "document_end",
+            "all_frames": false
+        }
+    ],
+    "icons": {
+        "128": "icon.png"
+    }
+}
