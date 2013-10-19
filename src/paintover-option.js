@@ -11,23 +11,30 @@ angular.module('paintover', ['ngRoute'])
 
 		// $locationProvider.html5Mode(true);
 	})
+	.constant('DEFAULT_COMPLETE_VALUE', 5)
 	.factory("vocaSvc",['$rootScope',function($rootScope) {
 		function _addVoca (voca,func) {
-			chrome.storage.sync.set(voca, function (item) {
-				$rootScope.$apply(function() {
-					func.apply(null,[item]);
+			if(voca){
+				chrome.storage.sync.set(voca, function () {
+					$rootScope.$apply(function() {
+						if(func) func.apply(null,[]);
+					});
 				});
-			});
+			}
 		}
 
-		function _removeVoca (voca) {
-			
+		function _removeVoca (key,func) {
+			chrome.storage.sync.remove(key,function(){
+				$rootScope.$apply(function() {
+					if(func) func.apply({},[]);
+				})
+			});
 		}
 
 		function _getVocaList (func) {
 			chrome.storage.sync.get(function(item){
 				$rootScope.$apply(function() {
-					func.apply({},[item]);
+					if(func) func.apply({},[item]);
 				})
 			});
 		}
@@ -43,7 +50,7 @@ angular.module('paintover', ['ngRoute'])
 
 		}
 	})
-	.controller('vocaRegCtrl',function($scope, vocaSvc) {
+	.controller('vocaRegCtrl',function($scope, vocaSvc, DEFAULT_COMPLETE_VALUE) {
 		$scope.voca = {
 			text: ""
 		};
@@ -57,13 +64,22 @@ angular.module('paintover', ['ngRoute'])
 		$scope.addVoca = function(voca) {
 			var vocaToSave = {};
 			
-			vocaToSave[voca.text] = voca.text;
-			
-			vocaSvc.addVoca(vocaToSave, function(a) {
+			vocaToSave[voca.text] = {
+				'text' : voca.text,
+				'complete' : DEFAULT_COMPLETE_VALUE
+			};
+			console.log(vocaToSave);
+			vocaSvc.addVoca(vocaToSave, function() {
 				$scope.loadVocaList();
 			});
 
 			$scope.voca.text = "";
+		};
+
+		$scope.removeVoca = function(key) {
+			vocaSvc.removeVoca(key,function() {
+				$scope.loadVocaList();
+			});
 		};
 
 		$scope.loadVocaList();

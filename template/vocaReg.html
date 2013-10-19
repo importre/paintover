@@ -1,4 +1,4 @@
-<div ng-controller="vocaRegCtrl" ng-csp>
+<div ng-controller="vocaRegCtrl">
 	<div class="page-header" >
 	  <h2>단어등록</h2>
 	</div>
@@ -9,11 +9,27 @@
 	<div>
 		<h3>등록된 단어 목록</h3>
 		<div>
-			<ul>
-				<li ng-repeat="(key,value) in vocaListReged">
-					단어명 : {{value}}
-				</li>
-			</ul>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>단어명</th>
+						<th>외운 정도</th>
+						<th>삭제</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-show="vocaListReged.length == 0">
+						<td colspan="3">추가된 단어가 없습니다.</td>
+					</tr>
+					<tr ng-repeat="(key, value) in vocaListReged">
+						<td>{{value.text}}</td>
+						<td>{{value.complete}}</td>
+						<td>
+							<button class="btn btn-danger" ng-click="removeVoca(key)">삭제</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>
