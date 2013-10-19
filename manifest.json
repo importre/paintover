@@ -14,8 +14,8 @@
         "default_title": "paintover - default title"
     },
     "permissions": [
-        "storage",
         "contextMenus",
+        "storage",
         "webRequest",
         "*://*.google.com/"
     ],
@@ -38,6 +38,7 @@
     ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' ",
     "icons": {
+        "16": "icon.png",
         "128": "icon.png"
     }
 }
