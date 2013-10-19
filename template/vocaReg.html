@@ -1,0 +1,19 @@
+<div ng-controller="vocaRegCtrl" ng-csp>
+	<div class="page-header" >
+	  <h2>단어등록</h2>
+	</div>
+	<div>
+	  <input type="text" ng-model="voca.text" >
+	  <button class="btn" data-ng-click="addVoca(voca)">등록</button>
+	</div>
+	<div>
+		<h3>등록된 단어 목록</h3>
+		<div>
+			<ul>
+				<li ng-repeat="(key,value) in vocaListReged">
+					단어명 : {{value}}
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

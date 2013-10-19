@@ -14,9 +14,12 @@
         "default_title": "paintover - default title"
     },
     "permissions": [
+        "storage",
+        "contextMenus",
         "webRequest",
         "*://*.google.com/"
     ],
+    "options_page": "options.html",
     "content_scripts": [
         {
             "matches": [
@@ -30,6 +33,10 @@
             "all_frames": false
         }
     ],
+    "web_accessible_resources" :[
+      "template/vocaReg.html"
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' ",
     "icons": {
         "128": "icon.png"
     }
