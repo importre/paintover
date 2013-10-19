@@ -15,32 +15,15 @@ var init = function () {
             key: "wordlist"
         }, function (response) {
             wordList = Object.keys(response.data);
-            for(var i=0; i < wordList.length; i++) {
-                wordList[i] = toUnicode(wordList[i]);
-            }
             if (wordList.length > 0) {
                 var regex = "\\b(" + wordList.join("|") + ")\\b";
                 re = new RegExp(regex, "gi");
                 console.log(re)
             }
-            skipNodeList = [];
             mark(document.body);
         }
     );
 };
-
-function toUnicode(theString) {
-    var unicodeString = '';
-    for (var i=0; i < theString.length; i++) {
-        var theUnicode = theString.charCodeAt(i).toString(16).toUpperCase();
-        while (theUnicode.length < 4) {
-            theUnicode = '0' + theUnicode;
-        }
-        theUnicode = '\\u' + theUnicode;
-        unicodeString += theUnicode;
-    }
-    return unicodeString;
-}
 
 function isHtml(text) {
     return text.indexOf("<meta ") >= 0 ||

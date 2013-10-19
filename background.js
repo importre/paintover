@@ -24,6 +24,8 @@ chrome.contextMenus.create(
 
 chrome.extension.onRequest.addListener(
     function (request, sender, sendResponse) {
+        chrome.pageAction.show(sender.tab.id);
+
         if (request.method == "storage" && request.key == "wordlist") {
             chrome.storage.sync.get(
                 function (items) {
@@ -33,5 +35,17 @@ chrome.extension.onRequest.addListener(
         } else {
             sendResponse({});
         }
+    }
+);
+
+chrome.pageAction.onClicked.addListener(
+    function (tab) {
+        chrome.tabs.create(
+            {
+                index: tab.index + 1,
+                url: "options.html"
+            }, function (tab) {
+            }
+        );
     }
 );
