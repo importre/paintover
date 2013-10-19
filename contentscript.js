@@ -10,8 +10,6 @@ var init = function () {
     re = new RegExp("\\b(hello|world)\\b", "gi");
     //skipNodeList = ["style", "script", "object", "form", "head", "input", "fieldset"];
     skipNodeList = [];
-
-    document.on
 };
 
 function isHtml(text) {

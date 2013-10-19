@@ -14,6 +14,8 @@
         "default_title": "paintover - default title"
     },
     "permissions": [
+        "contextMenus",
+        "storage",
         "webRequest",
         "*://*.google.com/"
     ],
@@ -31,6 +33,7 @@
         }
     ],
     "icons": {
+        "16": "icon.png",
         "128": "icon.png"
     }
 }
