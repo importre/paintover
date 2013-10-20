@@ -58,6 +58,7 @@ angular.module('paintover', ['ngRoute'])
 		$scope.loadVocaList = function() {
 			vocaSvc.getVocaList(function(items) {
 					$scope.vocaListReged = items;
+					$scope.vocalListLength = Object.keys(items).length;
 			});
 		};
 
