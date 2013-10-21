@@ -12,9 +12,18 @@ body {
 	line-height: 40px;
 	padding-bottom: 19px;
 }
-.page-header h2{
+.page-header h2 {
 	margin-top: 0px;
 }
-.page-header{
+.page-header {
 	margin-top: 0px;
+}
+.option-sidebar .nav > li > a {
+	display: block;
+	color: #222;
+	padding: 5px 20px;
+}
+.option-sidebar .nav > .active > a, .option-sidebar .nav > .active:hover > a, .option-sidebar .nav > .active:focus > a {
+	color: #dd4b39;
+	background-color: transparent;
 }

@@ -7,20 +7,27 @@ angular.module('paintover', ['ngRoute'])
       when('/vocareg', {
 			  templateUrl: chrome.extension.getURL('template/vocaReg.html'),
 			  controller: 'vocaRegCtrl'
+			}).
+      when('/etcreg', {
+			  templateUrl: chrome.extension.getURL('template/etcReg.html'),
+			  controller: 'etcRegCtrl'
 			});
-
-		// $locationProvider.html5Mode(true);
 	})
 	.constant('DEFAULT_COMPLETE_VALUE', 5)
-	.factory("vocaSvc",['$rootScope',function($rootScope) {
-		function _addVoca (voca,func) {
-			if(voca){
+	.factory("vocaSvc",['$rootScope','$q',function($rootScope,$q) {
+		function _addVoca (voca) {
+			if(!voca){
+				return;
+			}
+			var defer = $q.defer();
+
 				chrome.storage.sync.set(voca, function () {
 					$rootScope.$apply(function() {
-						if(func) func.apply(null,[]);
+						defer.resolve();
 					});
 				});
-			}
+
+			return defer.promise;
 		}
 
 		function _removeVoca (key,func) {
@@ -31,12 +38,16 @@ angular.module('paintover', ['ngRoute'])
 			});
 		}
 
-		function _getVocaList (func) {
+		function _getVocaList () {
+			var defer = $q.defer();
+
 			chrome.storage.sync.get(function(item){
 				$rootScope.$apply(function() {
-					if(func) func.apply({},[item]);
+					defer.resolve(item);
 				})
 			});
+
+			return defer.promise;
 		}
 
 		return {
@@ -45,10 +56,13 @@ angular.module('paintover', ['ngRoute'])
 			getVocaList : _getVocaList
 		}
 	}])
-	.controller('mainCtrl',function($scope) {
-		return {
-
-		}
+	.controller('mainCtrl',function($scope, $location) {
+		console.log($location.$$path);
+		$scope.isActive = function(path) {
+			return {
+				active : ($location.$$path == path)
+			}
+		};
 	})
 	.controller('vocaRegCtrl',function($scope, vocaSvc, DEFAULT_COMPLETE_VALUE) {
 		$scope.voca = {
@@ -56,22 +70,26 @@ angular.module('paintover', ['ngRoute'])
 		};
 
 		$scope.loadVocaList = function() {
-			vocaSvc.getVocaList(function(items) {
+			vocaSvc.getVocaList()
+				.then(function(items) {
 					$scope.vocaListReged = items;
-			});
+				});
 		};
 
 		$scope.addVoca = function(voca) {
+			if(voca.text === ""){
+				return;
+			}
 			var vocaToSave = {};
 			
 			vocaToSave[voca.text] = {
 				'text' : voca.text,
 				'complete' : DEFAULT_COMPLETE_VALUE
 			};
-			console.log(vocaToSave);
-			vocaSvc.addVoca(vocaToSave, function() {
-				$scope.loadVocaList();
-			});
+			vocaSvc.addVoca(vocaToSave)
+				.then(function() {
+					$scope.loadVocaList();
+				});
 
 			$scope.voca.text = "";
 		};
@@ -83,4 +101,7 @@ angular.module('paintover', ['ngRoute'])
 		};
 
 		$scope.loadVocaList();
+	})
+	.controller('etcRegCtrl',function($scope) {
+
 	});
