@@ -1,15 +1,28 @@
 var re = null;
 var skipNodeList = null;
+var wordList = [""];
 
 window.onload = function () {
     init();
-    mark(document.body);
 };
 
 var init = function () {
-    re = new RegExp("\\b(hello|world)\\b", "gi");
-    //skipNodeList = ["style", "script", "object", "form", "head", "input", "fieldset"];
-    skipNodeList = [];
+    skipNodeList = ["style", "script", "object", "form", "head", "input", "fieldset"];
+
+    chrome.extension.sendRequest(
+        {
+            method: "storage",
+            key: "wordlist"
+        }, function (response) {
+            wordList = Object.keys(response.data);
+            if (wordList.length > 0) {
+                var regex = "\\b(" + wordList.join("|") + ")\\b";
+                re = new RegExp(regex, "gi");
+                console.log(re)
+            }
+            mark(document.body);
+        }
+    );
 };
 
 function isHtml(text) {
