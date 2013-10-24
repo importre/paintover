@@ -1,0 +1,27 @@
+{
+  "name": "paintover",
+  "version": "0.0.1",
+  "description": "paintover =========",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/importre/paintover.git"
+  },
+  "author": "importre",
+  "contributors": [
+    "Jeado Ko",
+    "kyung yeol kim"
+  ],
+  "bugs": {
+    "url": "https://github.com/importre/paintover/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "load-grunt-tasks": "~0.2.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-compress": "~0.5.2"
+  }
+}
