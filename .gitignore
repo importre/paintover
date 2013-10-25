@@ -3,6 +3,10 @@ vendor/
 *.iml
 .*.swp
 .swp
+.vimrc
+dist/
+package/
+cert/
 
 ### osx ###
 .DS_Store
