@@ -22,7 +22,7 @@ paintover
 
 ### crx
 
-소스를 직접 로드하지 않고 배포하고자 하기위한 파일
+테스트용으로 직접 배포하고자 하기위한 파일
 
 * `$ npm install -g crx` 로 `crx` 설치
 * `$ mkdir cert && crx keygen cert/` 로 private key 생성

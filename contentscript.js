@@ -34,8 +34,22 @@ function isHtml(text) {
         text.indexOf("<div ") >= 0;
 }
 
+function isValidNode(node) {
+    return node.nodeType == Node.TEXT_NODE && !isHtml(node.nodeValue);
+}
+
+function isSpanMarkNode(node) {
+    if (!node || (node.nodeType != Node.ELEMENT_NODE)) {
+        return false;
+    }
+
+    return node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark";
+}
+
 function mark(node) {
-    if (!node.hasChildNodes() || node.tagName.toLowerCase() in skipNodeList) {
+    if (!node.hasChildNodes()
+        || node.tagName.toLowerCase() in skipNodeList
+        || isSpanMarkNode(node)) {
         return;
     }
 
@@ -46,7 +60,7 @@ function mark(node) {
         }
 
         node = children[i];
-        if (node.nodeType == Node.TEXT_NODE && !isHtml(node.nodeValue)) {
+        if (isValidNode(node) && re) {
             var data = node.nodeValue.replace(re, "<span class=\"mark\">$1</span>");
             data = data.replace("<span></span>", "");
 
@@ -67,3 +81,11 @@ function mark(node) {
                 });
 };
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    console.log(request);
+    if (request.cmd == "refresh") {
+        init();
+        var response = {result: "ok"};
+        sendResponse(response);
+    }
+});
