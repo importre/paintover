@@ -4,6 +4,7 @@ var wordList = [""];
 
 window.onload = function () {
     init();
+    addDomModifiedEvent();
 };
 
 var init = function () {
@@ -79,3 +80,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         sendResponse(response);
     }
 });
+
+function addDomModifiedEvent() {
+    var container = document.body;
+    if (container.addEventListener) {
+        container.addEventListener('DOMSubtreeModified', init, false);
+    }
+}
