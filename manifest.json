@@ -1,10 +1,8 @@
 {
-    // Required
     "name": "paintover",
     "manifest_version": 2,
     "version": "0.1",
 
-    // Recommended
     "description": "paintover - description",
     "background": {
         "scripts": ["background.js"]
@@ -27,7 +25,6 @@
                 "http://*/*",
                 "https://*/*"
             ],
-            // "exclude_globs":  ["*://*google.*/search*"],
             "js": ["contentscript.js"],
             "css": ["content.css"],
             "run_at": "document_end",
