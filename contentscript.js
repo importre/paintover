@@ -1,3 +1,5 @@
+
+
 var re = null;
 var skipNodeList = null;
 var wordList = [""];
@@ -47,13 +49,21 @@ function mark(node) {
         if (node.nodeType == Node.TEXT_NODE && !isHtml(node.nodeValue)) {
             var data = node.nodeValue.replace(re, "<span class=\"mark\">$1</span>");
             data = data.replace("<span></span>", "");
+
             if (data != node.nodeValue) {
                 var temp = document.createElement("span");
                 temp.innerHTML = data;
                 node.parentNode.insertBefore(temp, node);
                 node.parentNode.removeChild(node);
+                
             }
         }
     }
+
+    $('span.mark').popover({
+                    trigger : 'hover',
+                    content : '????',
+                    container : 'body'
+                });
 };
 
