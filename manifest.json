@@ -25,7 +25,7 @@
                 "http://*/*",
                 "https://*/*"
             ],
-            "js": ["contentscript.js"],
+            "js": ["vendor/jquery/jquery.min.js","src/popover.js","contentscript.js"],
             "css": ["content.css"],
             "run_at": "document_end",
             "all_frames": false
