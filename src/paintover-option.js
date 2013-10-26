@@ -106,7 +106,7 @@ angular.module('paintover', ['ngRoute', 'colorpicker.module'])
     .controller('etcRegCtrl', function ($scope) {
         var sliderOpts = {
             min: 5,
-            max: 20,
+            max: 10,
             orientation: "horizontal",
             tooltip: "show",
             handle: "round",
