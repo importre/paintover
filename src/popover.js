@@ -60,27 +60,8 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
     this.type     = type
     this.$element = $(element)
     this.options  = this.getOptions(options)
-
     // var triggers = this.options.trigger.split(' ')
     this.$element.on('mouseenter' + '.' + this.type, this.options.selector, $.proxy(this.enter, this));
-
-    // for (var i = triggers.length; i--;) {
-    //   var trigger = triggers[i]
-
-    //   if (trigger == 'click') {
-    //     this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
-    //   } else if (trigger != 'manual') {
-    //     var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focus'
-    //     // var eventOut = trigger == 'hover' ? '' : 'blur'
-
-    //     this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-    //     // this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
-    //   }
-    // }
-
-    this.options.selector ?
-      (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
-      this.fixTitle()
   }
 
   Tooltip.prototype.getDefaults = function () {
@@ -399,26 +380,6 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
 
 }(window.jQuery);
 
-/* ========================================================================
- * Bootstrap: popover.js v3.0.0
- * http://twbs.github.com/bootstrap/javascript.html#popovers
- * ========================================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ======================================================================== */
-
-
 +function ($) { "use strict";
 
   // POPOVER PUBLIC CLASS DEFINITION
@@ -434,7 +395,7 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
     placement: 'right'
   , trigger: 'click'
   , content: ''
-  , template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  , template: '<div class="popover"><div class="arrow"></div><div class="popover-content"></div></div>'
   })
 
 
@@ -474,9 +435,24 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
     $tip.find('.popover-content')['html']("<button class='plus'>+</button>")
 
     $tip.find('.popover-content button.plus').on('click',function(e) {
+      var key = me.$element.html().toLowerCase();
       e.preventDefault();
       e.stopPropagation();
-      console.log("?");
+      chrome.storage.sync.get(key,function(item) {
+        item[key].complete--;
+
+        if(item[key].complete <= 0) {
+          chrome.storage.sync.remove(item[key].text,function() {
+            init();
+          });
+        }else {
+          chrome.storage.sync.set(item,function() {
+            init(); 
+          });
+        }
+        
+      });
+
       me.leave(me);
     });
 

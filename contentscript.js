@@ -3,6 +3,7 @@ var skipNodeList = null;
 var wordList = [""];
 var wordListObj = {};
 var $$option = {};
+var tab;
 
 window.onload = function () {
     init();
@@ -23,13 +24,13 @@ var init = function () {
                 bgColor : "#ffff00",
                 fgColor : "#ff0000"
             };
-            console.log(wordListObj);
+
             wordList = Object.keys(response.data);
             if (wordList.length > 0) {
                 var regex = "\\b(" + wordList.join("|") + ")\\b";
                 re = new RegExp(regex, "gi");
-                console.log(re)
             }
+
             mark(document.body);
         }
     );
@@ -50,7 +51,16 @@ function isSpanMarkNode(node) {
     if (!node || (node.nodeType != Node.ELEMENT_NODE)) {
         return false;
     }
-
+    if(node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark"){
+        if(wordListObj[$(node).html().toLowerCase()] === undefined){
+            $(node).css("background",0);
+            $(node).popover('destroy');
+            return true;
+        }
+        var alpha = wordListObj[$(node).html().toLowerCase()].complete / $$option.maxComplete;
+        var rgba = getRGBA($$option.bgColor, alpha);
+        $(node).css("background",rgba);
+    }
     return node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark";
 }
 
@@ -62,6 +72,7 @@ function mark(node) {
     }
 
     var children = node.childNodes;
+
     for (var i = 0; i < children.length; i++) {
         if (children[i].nodeType == Node.ELEMENT_NODE) {
             arguments.callee(children[i]);
@@ -71,10 +82,12 @@ function mark(node) {
         if (isValidNode(node) && re) {
             var data = node.nodeValue.replace(re, "<span class='mark' word='$1'>$1</span>");
             data = data.replace("<span></span>", "");
+
+            // console.log("data");
             if (data != node.nodeValue) {
                 var temp = document.createElement("span");
                 temp.innerHTML = data;
-                
+                // console.log(temp);
                 var alpha = wordListObj[$(temp).find("span.mark").html().toLowerCase()].complete / $$option.maxComplete;
                 var rgba = getRGBA($$option.bgColor, alpha);
                 $(temp).find('span.mark').css("background",rgba);
@@ -87,7 +100,6 @@ function mark(node) {
 };
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    console.log(request);
     if (request.cmd == "refresh") {
         init();
         var response = {result: "ok"};
@@ -103,7 +115,7 @@ function addDomModifiedEvent() {
 
             $('span.mark').popover({
                 trigger : 'hover',
-                content : '????',
+                content : 'dummy value',
                 container : 'body'
             });
         }, false);
