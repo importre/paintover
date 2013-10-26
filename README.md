@@ -5,6 +5,7 @@ paintover
 
 * [`node.js`](http://nodejs.org/)를 설치한다.
 * `$ npm install -g bower` (windows 사용자는 `$ npm install bower`)
+* `$ npm install -g grunt-cli`
 * `bower install` 로 디펜던시 설치
 * 크롬 주소창에 `chrome://extensions/` 입력
 * `Developer mode` 체크
