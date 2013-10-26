@@ -24,6 +24,8 @@ chrome.contextMenus.create({
 
 chrome.extension.onRequest.addListener(
     function (request, sender, sendResponse) {
+        if (!sender.tab) return;
+
         chrome.pageAction.show(sender.tab.id);
 
         if (request.method == "storage" && request.key == "wordlist") {
