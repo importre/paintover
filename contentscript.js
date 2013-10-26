@@ -4,6 +4,7 @@ var wordList = [""];
 var wordListObj = {};
 var $$option = {};
 var tab;
+var DEFAULT_COMPLETE_VALUE = 5;
 
 window.onload = function () {
     init();
@@ -20,7 +21,7 @@ var init = function () {
         }, function (response) {
             wordListObj = response.data;
             $$option = response.data['$$option'] || {
-                maxComplete : 10,
+                maxComplete : DEFAULT_COMPLETE_VALUE,
                 bgColor : "#ffff00",
                 fgColor : "#ff0000"
             };
