@@ -1,19 +1,26 @@
 var DEFAULT_COMPLETE_VALUE = 5;
 
 function onClick(info, tab) {
-    var word = info.selectionText;
-    var map = {};
-    map[word] = {
-        'text': word,
-        'complete': DEFAULT_COMPLETE_VALUE
-    };
-    chrome.storage.sync.set(map, function () {
-        // Notify that we saved.
-        var request = {cmd: "refresh"};
-        chrome.tabs.sendMessage(tab.id, request, function (response) {
-            console.log(response);
+    var word = info.selectionText.toLowerCase();
+    chrome.storage.sync.get(function (obj) {
+        var map = {};
+        var maxComplete = DEFAULT_COMPLETE_VALUE;
+        if (obj.$$option) {
+            var tmp = obj.$$option["maxComplete"];
+            if (tmp) maxComplete = tmp;
+        }
+        map[word] = {
+            'text': word,
+            'complete': maxComplete
+        };
+        chrome.storage.sync.set(map, function () {
+            // Notify that we saved.
+            var request = {cmd: "refresh"};
+            chrome.tabs.sendMessage(tab.id, request, function (response) {
+                console.log(response);
+            });
         });
-    });
+    })
 }
 
 chrome.contextMenus.create({
@@ -31,7 +38,7 @@ chrome.extension.onRequest.addListener(
         if (request.method == "storage" && request.key == "wordlist") {
             chrome.storage.sync.get(function (items) {
                 sendResponse({data: items});
-            })
+            });
         } else {
             sendResponse({});
         }
