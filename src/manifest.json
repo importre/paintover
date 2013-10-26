@@ -5,10 +5,10 @@
 
     "description": "paintover - description",
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["scripts/background.js"]
     },
     "page_action": {
-        "default_icon": "icon.png",
+        "default_icon": "assets/icon.png",
         "default_title": "paintover - default title"
     },
     "permissions": [
@@ -18,25 +18,25 @@
         "webRequest",
         "*://*.google.com/"
     ],
-    "options_page": "options.html",
+    "options_page": "views/options.html",
     "content_scripts": [
         {
             "matches": [
                 "http://*/*",
                 "https://*/*"
             ],
-            "js": ["vendor/jquery/jquery.min.js","src/popover.js","contentscript.js"],
-            "css": ["content.css"],
+            "js": ["vendor/jquery/jquery.min.js","scripts/popover.js","scripts/contentscript.js"],
+            "css": ["styles/content.css"],
             "run_at": "document_end",
             "all_frames": false
         }
     ],
     "web_accessible_resources" :[
-      "template/vocaReg.html"
+      "views/vocaReg.html"
     ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' ",
     "icons": {
-        "16": "icon.png",
-        "128": "icon.png"
+        "16": "assets/icon.png",
+        "128": "assets/icon.png"
     }
 }

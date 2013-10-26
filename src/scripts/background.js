@@ -48,7 +48,7 @@ chrome.extension.onRequest.addListener(
 chrome.pageAction.onClicked.addListener(function (tab) {
     chrome.tabs.create({
         index: tab.index + 1,
-        url: "options.html"
+        url: "views/options.html"
     }, function (tab) {
     });
 });

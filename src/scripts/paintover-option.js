@@ -5,11 +5,11 @@ angular.module('paintover', ['ngRoute', 'colorpicker.module'])
       	redirectTo : '/vocareg'
       }).
       when('/vocareg', {
-			  templateUrl: chrome.extension.getURL('template/vocaReg.html'),
+			  templateUrl: chrome.extension.getURL('../views/vocaReg.html'),
 			  controller: 'vocaRegCtrl'
 			}).
       when('/etcreg', {
-			  templateUrl: chrome.extension.getURL('template/etcReg.html'),
+			  templateUrl: chrome.extension.getURL('../views/etcReg.html'),
 			  controller: 'etcRegCtrl'
 			});
 	})
