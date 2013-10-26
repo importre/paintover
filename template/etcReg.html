@@ -1,3 +1,27 @@
-<div class="page-header">
-  <h2>기타 설정 등록</h2>
+<div ng-controller="etcRegCtrl">
+    <div class="page-header">
+        <h2>paintover 기타 옵션</h2>
+    </div>
+    <div>
+        <div>
+            <h3>하이라이트 설정</h3>
+
+            <div>
+            <span class="highlight-example" ng-model="options"
+                  ng-style="{'background-color': options.bgColor}">
+                Hello, PAINTOVER!!!
+            </span>
+            </div>
+            <div>
+                배경색
+                <input colorpicker="" colorpicker-position="right"
+                       ng-change="setOptions();" ng-model="options.bgColor"
+                       class="span2 ng-valid ng-dirty" type="text">
+            </div>
+        </div>
+        <div>
+            <h3>외운정도</h3>
+            <input class="compleMaxSlider" type="text" value="">
+        </div>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-angular.module('paintover', ['ngRoute'])
+angular.module('paintover', ['ngRoute', 'colorpicker.module'])
 	.config(function($routeProvider, $locationProvider) {
 		$routeProvider.
       when('/', {
@@ -82,7 +82,7 @@ angular.module('paintover', ['ngRoute'])
 				return;
 			}
 			var vocaToSave = {};
-			
+
 			vocaToSave[voca.text] = {
 				'text' : voca.text,
 				'complete' : DEFAULT_COMPLETE_VALUE
@@ -103,6 +103,49 @@ angular.module('paintover', ['ngRoute'])
 
 		$scope.loadVocaList();
 	})
-	.controller('etcRegCtrl',function($scope) {
+    .controller('etcRegCtrl', function ($scope) {
+        var sliderOpts = {
+            min: 5,
+            max: 20,
+            orientation: "horizontal",
+            tooltip: "show",
+            handle: "round",
+            selection: "before"
+        }
 
-	});
+        var slider = $(".compleMaxSlider").slider(sliderOpts);
+        slider.on('slide', $scope.setSlider);
+
+        chrome.storage.sync.get("$$option", function (obj) {
+            $scope.$apply(function () {
+                // default color
+                $scope.options = {
+                    completeMax: 5,
+                    bgColor: "#ffff00"
+                };
+
+                if (obj.$$option) {
+                    var bgColor = obj.$$option["bgColor"];
+                    if (bgColor) {
+                        $scope.options["bgColor"] = bgColor;
+                    }
+
+                    var completeMax = obj.$$option["completeMax"];
+                    if (completeMax) {
+                        $scope.options["completeMax"] = completeMax;
+                        slider.slider('setValue', completeMax);
+                    }
+                }
+            });
+        });
+
+        $scope.setOptions = function () {
+            chrome.storage.sync.set({"$$option": $scope.options}, function () {
+            });
+        };
+
+        $scope.setSlider = function(event) {
+            $scope.options["completeMax"] = event.value;
+            $scope.setOptions();
+        }
+    });

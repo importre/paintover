@@ -1,10 +1,11 @@
 {
-  "name": "paintover",
-  "version": "0.0.0",
-  "dependencies": {
-    "bootstrap": "~3.0.0",
-    "todc-bootstrap": "git@github.com:acmetech/todc-bootstrap.git#master",
-    "angular": "~1.2.0-rc.3",
-    "angular-route": "~1.2.0-rc.3"
-  }
+    "name": "paintover",
+    "version": "0.0.0",
+    "dependencies": {
+        "bootstrap": "~3.0.0",
+        "todc-bootstrap": "git@github.com:acmetech/todc-bootstrap.git#master",
+        "angular": "~1.2.0-rc.3",
+        "angular-route": "~1.2.0-rc.3",
+        "angular-bootstrap-colorpicker": "~2.0.4"
+    }
 }
