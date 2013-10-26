@@ -120,7 +120,7 @@ angular.module('paintover', ['ngRoute', 'colorpicker.module'])
             $scope.$apply(function () {
                 // default color
                 $scope.options = {
-                    completeMax: 5,
+                    maxComplete: 5,
                     bgColor: "#ffff00"
                 };
 
@@ -130,10 +130,10 @@ angular.module('paintover', ['ngRoute', 'colorpicker.module'])
                         $scope.options["bgColor"] = bgColor;
                     }
 
-                    var completeMax = obj.$$option["completeMax"];
-                    if (completeMax) {
-                        $scope.options["completeMax"] = completeMax;
-                        slider.slider('setValue', completeMax);
+                    var maxComplete = obj.$$option["maxComplete"];
+                    if (maxComplete) {
+                        $scope.options["maxComplete"] = maxComplete;
+                        slider.slider('setValue', maxComplete);
                     }
                 }
             });
@@ -145,7 +145,7 @@ angular.module('paintover', ['ngRoute', 'colorpicker.module'])
         };
 
         $scope.setSlider = function(event) {
-            $scope.options["completeMax"] = event.value;
+            $scope.options["maxComplete"] = event.value;
             $scope.setOptions();
         }
     });
