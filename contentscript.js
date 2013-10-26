@@ -19,9 +19,9 @@ var init = function () {
         }, function (response) {
             wordListObj = response.data;
             $$option = response.data['$$option'] || {
-                maxComplete : 5,
-                bgColor : "yellow",
-                fgColor : "red"
+                maxComplete : 10,
+                bgColor : "#ffff00",
+                fgColor : "#ff0000"
             };
             console.log(wordListObj);
             wordList = Object.keys(response.data);
@@ -69,12 +69,16 @@ function mark(node) {
 
         node = children[i];
         if (isValidNode(node) && re) {
-            var data = node.nodeValue.replace(re, "<span class='mark'>$1</span>");
+            var data = node.nodeValue.replace(re, "<span class='mark' word='$1'>$1</span>");
             data = data.replace("<span></span>", "");
             if (data != node.nodeValue) {
                 var temp = document.createElement("span");
                 temp.innerHTML = data;
-                $(temp).css("opacity", wordListObj[$(temp).find("span.mark").html().toLowerCase()].complete / $$option.maxComplete);
+                
+                var alpha = wordListObj[$(temp).find("span.mark").html().toLowerCase()].complete / $$option.maxComplete;
+                var rgba = getRGBA($$option.bgColor, alpha);
+                $(temp).find('span.mark').css("background",rgba);
+
                 node.parentNode.insertBefore(temp, node);
                 node.parentNode.removeChild(node);
             }
@@ -104,4 +108,37 @@ function addDomModifiedEvent() {
             });
         }, false);
     }
+}
+
+function getRGBA(hex, a) {
+    var color = this,
+        str = "string",
+        args = arguments.length,
+        r,
+        parseHex = function (h) {
+          return parseInt(h, 16);
+        };
+
+        if (typeof hex === str) {
+                r = hex.substr(hex.indexOf("#") + 1);
+                var threeDigits = r.length === 3;
+                r = parseHex(r);
+                threeDigits &&
+                        (r = (((r & 0xF00) * 0x1100) | ((r & 0xF0) * 0x110) | ((r & 0xF) * 0x11)));
+        }
+        
+        
+        g = (r & 0xFF00) / 0x100;
+        b =  r & 0xFF;
+        r =  r >>> 0x10;
+
+    var rgbaList = [
+            typeof r === str && parseHex(r) || r,
+            typeof g === str && parseHex(g) || g,
+            typeof b === str && parseHex(b) || b,
+            (typeof a !== str && typeof a !== "number") && 1 ||
+                    typeof a === str && parseFloat(a) || a
+    ];
+
+    return "rgba(" + rgbaList.join(",") + ")";
 }
