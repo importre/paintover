@@ -30,6 +30,7 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
 
   // TOOLTIP PUBLIC CLASS DEFINITION
   // ===============================
+  var opendTooltip = [];
 
   var Tooltip = function (element, options) {
     this.type       =
@@ -60,21 +61,22 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
     this.$element = $(element)
     this.options  = this.getOptions(options)
 
-    var triggers = this.options.trigger.split(' ')
+    // var triggers = this.options.trigger.split(' ')
+    this.$element.on('mouseenter' + '.' + this.type, this.options.selector, $.proxy(this.enter, this));
 
-    for (var i = triggers.length; i--;) {
-      var trigger = triggers[i]
+    // for (var i = triggers.length; i--;) {
+    //   var trigger = triggers[i]
 
-      if (trigger == 'click') {
-        this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
-      } else if (trigger != 'manual') {
-        var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focus'
-        var eventOut = trigger == 'hover' ? '' : 'blur'
+    //   if (trigger == 'click') {
+    //     this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
+    //   } else if (trigger != 'manual') {
+    //     var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focus'
+    //     // var eventOut = trigger == 'hover' ? '' : 'blur'
 
-        this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-        this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
-      }
-    }
+    //     this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
+    //     // this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
+    //   }
+    // }
 
     this.options.selector ?
       (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
@@ -117,10 +119,15 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
 
     self.hoverState = 'in'
 
+    var t = opendTooltip.pop();
+    if(t) t.leave(t);
+
+    opendTooltip.push(self);
+
     if (!self.options.delay || !self.options.delay.show) return self.show()
 
     self.timeout = setTimeout(function () {
-      if (self.hoverState == 'in') self.show()
+      if (self.hoverState == 'in') self.show();
     }, self.options.delay.show)
   }
 
@@ -464,20 +471,30 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
     var content = this.getContent()
 
     $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
-    $tip.find('.popover-content')['html']("<button class='plus'>+</button><button class='minus'>-</button>")
+    $tip.find('.popover-content')['html']("<button class='plus'>+</button>")
 
     $tip.find('.popover-content button.plus').on('click',function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("?");
       me.leave(me);
     });
 
-    $tip.find('.popover-content button.minus').on('click',function(e) {
+    $tip.on('click',function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    $('body').on('click',function () {
       me.leave(me);
     });
-    $tip.removeClass('fade top bottom left right in')
+
+    $tip.removeClass('fade top bottom left right in');
 
     // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
     // this manually by checking the contents.
-    if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
+    // IE 지원할 필요 없다. ㅋ
+    // if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
   }
 
   Popover.prototype.hasContent = function () {

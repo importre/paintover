@@ -1,6 +1,8 @@
 var re = null;
 var skipNodeList = null;
 var wordList = [""];
+var wordListObj = {};
+var $$option = {};
 
 window.onload = function () {
     init();
@@ -15,6 +17,13 @@ var init = function () {
             method: "storage",
             key: "wordlist"
         }, function (response) {
+            wordListObj = response.data;
+            $$option = response.data['$$option'] || {
+                maxComplete : 5,
+                bgColor : "yellow",
+                fgColor : "red"
+            };
+            console.log(wordListObj);
             wordList = Object.keys(response.data);
             if (wordList.length > 0) {
                 var regex = "\\b(" + wordList.join("|") + ")\\b";
@@ -60,11 +69,12 @@ function mark(node) {
 
         node = children[i];
         if (isValidNode(node) && re) {
-            var data = node.nodeValue.replace(re, "<span class=\"mark\">$1</span>");
+            var data = node.nodeValue.replace(re, "<span class='mark'>$1</span>");
             data = data.replace("<span></span>", "");
             if (data != node.nodeValue) {
                 var temp = document.createElement("span");
                 temp.innerHTML = data;
+                $(temp).css("opacity", wordListObj[$(temp).find("span.mark").html().toLowerCase()].complete / $$option.maxComplete);
                 node.parentNode.insertBefore(temp, node);
                 node.parentNode.removeChild(node);
             }
@@ -84,6 +94,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 function addDomModifiedEvent() {
     var container = document.body;
     if (container.addEventListener) {
-        container.addEventListener('DOMSubtreeModified', init, false);
+        container.addEventListener('DOMSubtreeModified', function () {
+            init();
+
+            $('span.mark').popover({
+                trigger : 'hover',
+                content : '????',
+                container : 'body'
+            });
+        }, false);
     }
 }
