@@ -55,6 +55,7 @@ function isSpanMarkNode(node) {
     if(node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark"){
         if(wordListObj[$(node).html().toLowerCase()] === undefined){
             $(node).css("background",0);
+            $(node).removeClass('mark');
             $(node).popover('destroy');
             return true;
         }
@@ -160,21 +161,14 @@ function getRGBA(hex, a) {
 
     return "rgba(" + rgbaList.join(",") + ")";
 }
-<<<<<<< HEAD:contentscript.js
-
-
 
 function focus() {
-    console.log($("span.mark").get());
     // Padding around the selection
     var PADDING = 5;
-
     // Opacity of the overlay
     var OPACITY = 0.75;
-
     // Key modifier that needs to be held down for overlay to appear
     var MODIFIER = null;
-
     // The opaque overlay canvas
     var overlay,
         overlayContext,
@@ -183,17 +177,17 @@ function focus() {
     // Reference to the redraw animation so it can be cancelled
     redrawAnimation,
 
-    // Currently selected region
-    selectedRegion = { left: 0, top: 0, right: 0, bottom: 0 },
-
-    // Currently cleared region
-    clearedRegion = { left: 0, top: 0, right: 0, bottom: 0 },
+    // 선택된 단어들의 regin데이터 목록
+    selectedRegionList = [];
 
     // Currently pressed down key modifiers
     keyModifiers = { ctrl: false, shift: false, alt: false, cmd: false };
 
     // Ensures that Fokus isn't initialized twice on the same page
     window.__fokused = true;
+
+    //클릭여부 처음엔 클릭안했으니 false 추후에 클릭하면 canvas삭제
+    isClicked = false;
 
     overlay = document.createElement( 'canvas' );
     overlayContext = overlay.getContext( '2d' );
@@ -206,25 +200,26 @@ function focus() {
     overlay.style.pointerEvents = 'none';
     overlay.style.background = 'transparent';
 
-    // document.addEventListener( 'mousedown', onMouseDown, false );
-
     onWindowResize();
+
+    function onKeyPress( event ) {
+        if(event.cancelable) isClicked = true;
+        updateSelection();
+    }
+
     function onMouseDown( event ) {
+        //팝오버된것은 무시한다.
+        if($(event.target).parents(".paintover-popover").length>0) return;
 
-            updateSelection();
-
+        isClicked = true;
+        updateSelection();
     }
 
     /**
      * Steps through all selected nodes and updates the selected
      * region (bounds of selection).
-     *
-     * @param {Boolean} immediate flags if selection should happen
-     * immediately, defaults to false which means the selection
-     * rect animates into place
      */
-    function updateSelection( immediate ) {
-
+    function updateSelection() {
         // Default to negative space
         var currentRegion = { left: Number.MAX_VALUE, top: Number.MAX_VALUE, right: 0, bottom: 0 };
 
@@ -256,29 +251,23 @@ function focus() {
                 currentRegion.right = Math.max( currentRegion.right, x + w );
                 currentRegion.bottom = Math.max( currentRegion.bottom, y + h );
             }
-            console.log(currentRegion);
-        }
-
-        // Don't update selection if a modifier is specified but not
-        // pressed down, unless there's already a selected region
-        if( !MODIFIER || MODIFIER === 'none' || keyModifiers[ MODIFIER ] || hasSelection() ) {
-            selectedRegion = currentRegion;
-        }
-
-        // If flagged, update the cleared region immediately
-        if( immediate ) {
-            clearedRegion = selectedRegion;
+            selectedRegionList.push({
+                left: x,
+                top: y,
+                right: x+w,
+                bottom: y+h
+            });
         }
 
         // Start repainting if there is a selected region
         if( hasSelection() ) {
             redraw();
         }
-
     }
 
     function hasSelection() {
-        return true;
+        var spanMarkLength = $("span.mark").get().length;
+        return (spanMarkLength > 0);
     }
 
     function onWindowResize( event ) {
@@ -303,27 +292,16 @@ function focus() {
         overlayContext.fillStyle = 'rgba( 0, 0, 0, '+ overlayAlpha +' )';
         overlayContext.fillRect( 0, 0, overlay.width, overlay.height );
 
-        if( _hasSelection ) {
-            if( overlayAlpha < 0.1 ) {
-                // Clear the selection instantly if we're just fading in
-                clearedRegion = selectedRegion;
-            }
-            else {
-                // Ease the cleared region towards the selected selection
-                clearedRegion.left += ( selectedRegion.left - clearedRegion.left ) * 0.18;
-                clearedRegion.top += ( selectedRegion.top - clearedRegion.top ) * 0.18;
-                clearedRegion.right += ( selectedRegion.right - clearedRegion.right ) * 0.18;
-                clearedRegion.bottom += ( selectedRegion.bottom - clearedRegion.bottom ) * 0.18;
-            }
-        }
-
-        // Cut out the cleared region
-        overlayContext.clearRect(
-            clearedRegion.left - window.scrollX - PADDING,
-            clearedRegion.top - window.scrollY - PADDING,
-            ( clearedRegion.right - clearedRegion.left ) + ( PADDING * 2 ),
-            ( clearedRegion.bottom - clearedRegion.top ) + ( PADDING * 2 )
-        );
+        //전체 선택된 단어를 가지고와서 해당 부분을 지운다.
+        for (var i = 0; i < selectedRegionList.length; i++) {
+            overlayContext.clearRect(
+                selectedRegionList[i].left - window.scrollX - PADDING,
+                selectedRegionList[i].top - window.scrollY - PADDING,
+                ( selectedRegionList[i].right - selectedRegionList[i].left ) + ( PADDING * 2 ),
+                ( selectedRegionList[i].bottom - selectedRegionList[i].top ) + ( PADDING * 2 )
+            );
+            
+        };
 
         // Fade in if there's a valid selection...
         if( _hasSelection ) {
@@ -337,20 +315,27 @@ function focus() {
         // Ensure there is no overlap
         cancelAnimationFrame( redrawAnimation );
 
-        // Continue so long as there is content selected or we are fading out
-        if( _hasSelection || overlayAlpha > 0 ) {
+        // 계속해서 그린다. 재귀호출 부분. 클릭하기 전이나 선택된게 없을때까지
+        if( isClicked === false && _hasSelection && overlayAlpha > 0 ) {
             // Append the overlay if it isn't already in the DOM
-            if( !overlay.parentNode ) document.body.appendChild( overlay );
+            if( !overlay.parentNode ) {
+                document.body.appendChild( overlay );
+                document.addEventListener( 'mousedown', onMouseDown, false );
+                document.addEventListener( 'keydown', onKeyPress, false );
+            };
 
             // Stage a new animation frame
+            redrawAnimation = requestAnimationFrame( redraw );
         }
         else {
             document.body.removeChild( overlay );
+            document.removeEventListener('mousedown',onMouseDown,false);
+            document.removeEventListener('keydown',onKeyPress,false);
         }
 
     }
 
-        /**
+    /**
      * Gets the x/y screen position of the target node, source:
      * http://www.quirksmode.org/js/findpos.html
      */
@@ -367,8 +352,6 @@ function focus() {
 
         return { x: x, y: y };
     }
-    updateSelection();
 
+    updateSelection();
 }
-=======
->>>>>>> 5a7de058d2b80edc827d9e2d44cf996b497db193:src/scripts/contentscript.js
