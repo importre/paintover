@@ -60,8 +60,10 @@ function isSpanMarkNode(node) {
             return true;
         }
         var alpha = wordListObj[$(node).html().toLowerCase()].complete / $$option.maxComplete;
-        var rgba = getRGBA($$option.bgColor, alpha);
-        $(node).css("background",rgba);
+        var bgColor = getRGBA($$option.bgColor, alpha);
+        var fgColor = getRGBA($$option.fgColor, 1.0);
+        $(node).css("background",bgColor);
+        $(node).css("color",fgColor);
     }
     return node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark";
 }
@@ -91,8 +93,11 @@ function mark(node) {
                 var word =  $(spanEl).find("span.mark").html();
                 if (word) {
                     var alpha = wordListObj[word.toLowerCase()].complete / $$option.maxComplete;
-                    var rgba = getRGBA($$option.bgColor, alpha);
-                    $(spanEl).find('span.mark').css("background",rgba);
+                    var bgColor = getRGBA($$option.bgColor, alpha);
+                    var fgColor = getRGBA($$option.fgColor, 1.0);
+                    var markNode = $(spanEl);
+                    markNode.find('span.mark').css("background",bgColor);
+                    markNode.find('span.mark').css("color",fgColor);
 
                     node.parentNode.insertBefore(spanEl, node);
                     node.parentNode.removeChild(node);

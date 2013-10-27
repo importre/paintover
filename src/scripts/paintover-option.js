@@ -121,13 +121,19 @@ angular.module('paintover', ['ngRoute', 'colorpicker.module'])
                 // default color
                 $scope.options = {
                     maxComplete: 5,
-                    bgColor: "#ffff00"
+                    bgColor: "#ffff00",
+                    fgColor: "#ff0000"
                 };
 
                 if (obj.$$option) {
                     var bgColor = obj.$$option["bgColor"];
                     if (bgColor) {
                         $scope.options["bgColor"] = bgColor;
+                    }
+
+                    var fgColor = obj.$$option["fgColor"];
+                    if (fgColor) {
+                        $scope.options["fgColor"] = fgColor;
                     }
 
                     var maxComplete = obj.$$option["maxComplete"];
