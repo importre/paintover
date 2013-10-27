@@ -3,8 +3,10 @@
 	  <h2>단어등록</h2>
 	</div>
 	<div>
-	  <input type="text" ng-model="voca.text" >
-	  <button class="btn" data-ng-click="addVoca(voca)">등록</button>
+        <form ng-submit="addVoca(voca)" ng-controller="mainCtrl">
+            <input type="text" ng-model="voca.text" >
+            <button class="btn" data-ng-click="addVoca(voca)">등록</button>
+        </form>
 	</div>
 	<div>
 		<h3>등록된 단어 목록</h3>
