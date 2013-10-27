@@ -62,7 +62,8 @@ module.exports = function(grunt) {
                         'src/vendor/jquery/jquery.min.js',
                         'src/vendor/angular/angular.min.js',
                         'src/vendor/angular-route/angular-route.min.js',
-                        'src/vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js'
+                        'src/vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
+                        'src/vendor/angular-bootstrap-colorpicker/css/colorpicker.css'
                     ]
                 }
                 ]

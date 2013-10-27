@@ -25,6 +25,8 @@ var init = function () {
                 bgColor : "#ffff00",
                 fgColor : "#ff0000"
             };
+            
+            console.log($$option);
 
             wordList = Object.keys(response.data);
             if (wordList.length > 0) {
@@ -60,8 +62,10 @@ function isSpanMarkNode(node) {
             return true;
         }
         var alpha = wordListObj[$(node).html().toLowerCase()].complete / $$option.maxComplete;
-        var rgba = getRGBA($$option.bgColor, alpha);
-        $(node).css("background",rgba);
+        var bgColor = getRGBA($$option.bgColor, alpha);
+        var fgColor = getRGBA($$option.fgColor, 1.0);
+        $(node).css("background",bgColor);
+        $(node).css("color",fgColor);
     }
     return node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark";
 }
@@ -91,8 +95,13 @@ function mark(node) {
                 var word =  $(spanEl).find("span.mark").html();
                 if (word) {
                     var alpha = wordListObj[word.toLowerCase()].complete / $$option.maxComplete;
-                    var rgba = getRGBA($$option.bgColor, alpha);
-                    $(spanEl).find('span.mark').css("background",rgba);
+                    var bgColor = getRGBA($$option.bgColor, alpha);
+                    var fgColor = getRGBA($$option.fgColor, 1.0);
+                    console.log(fgColor);
+                    console.log($$option.fgColor);
+                    var markNode = $(spanEl);
+                    markNode.find('span.mark').css("background",bgColor);
+                    markNode.find('span.mark').css("color",fgColor);
 
                     node.parentNode.insertBefore(spanEl, node);
                     node.parentNode.removeChild(node);
@@ -242,6 +251,9 @@ function focus() {
 
             // Fetch the screen coordinates for this element
             var position = getScreenPosition( node );
+
+            if (position.x == 0 && position.y == 0)
+                continue;
 
             var x = position.x,
                 y = position.y,
