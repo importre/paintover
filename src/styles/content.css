@@ -8,19 +8,25 @@ span.mark {
   src: url('chrome-extension://__MSG_@@extension_id__/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('chrome-extension://__MSG_@@extension_id__/fonts/glyphicons-halflings-regular.woff') format('woff'), url('chrome-extension://__MSG_@@extension_id__/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('chrome-extension://__MSG_@@extension_id__/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 }
 
+.paintover-popover span.plus {
+  display: inline;
+  cursor:pointer;
+}
+
 .paintover-popover span.plus:hover {
   color: red;
+}
+
+.paintover-popover span.question {
+  display: inline;
   cursor:pointer;
 }
 
 .paintover-popover span.question:hover {
-  margin-top: 5px;
   color: red;
-  cursor:pointer;
 }
 
 .paintover-popover span.question {
-  margin-top: 5px;
   cursor:pointer;
 }
 
