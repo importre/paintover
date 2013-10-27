@@ -25,8 +25,6 @@ var init = function () {
                 bgColor : "#ffff00",
                 fgColor : "#ff0000"
             };
-            
-            console.log($$option);
 
             wordList = Object.keys(response.data);
             if (wordList.length > 0) {
@@ -58,6 +56,7 @@ function isSpanMarkNode(node) {
         if(wordListObj[$(node).html().toLowerCase()] === undefined){
             $(node).css("background",0);
             $(node).removeClass('mark');
+            $(node).css("color","");
             $(node).popover('destroy');
             return true;
         }
@@ -97,8 +96,6 @@ function mark(node) {
                     var alpha = wordListObj[word.toLowerCase()].complete / $$option.maxComplete;
                     var bgColor = getRGBA($$option.bgColor, alpha);
                     var fgColor = getRGBA($$option.fgColor, 1.0);
-                    console.log(fgColor);
-                    console.log($$option.fgColor);
                     var markNode = $(spanEl);
                     markNode.find('span.mark').css("background",bgColor);
                     markNode.find('span.mark').css("color",fgColor);
