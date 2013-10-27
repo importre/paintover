@@ -1,15 +1,15 @@
 {
     "name": "paintover",
     "manifest_version": 2,
-    "version": "0.1",
+    "version": "0.0.1",
 
-    "description": "paintover - description",
+    "description": "모르는 단어를 미리 등록해두고 웹 서핑할 때 해당 단어가 나오면 하이라이트 해주는 크롬 확장 프로그램",
     "background": {
         "scripts": ["scripts/background.js"]
     },
     "page_action": {
         "default_icon": "assets/icon.png",
-        "default_title": "paintover - default title"
+        "default_title": "paintover"
     },
     "permissions": [
         "tabs",
