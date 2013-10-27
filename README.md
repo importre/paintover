@@ -9,7 +9,7 @@ paintover
 * `bower install` 로 디펜던시 설치
 * 크롬 주소창에 `chrome://extensions/` 입력
 * `Developer mode` 체크
-* `Load unpacked extensions...` 을 선택하고 프로젝트 선택
+* `Load unpacked extensions...` 을 선택하고 `src/` 디렉토리 선택
 
 ## 빌드방법
 

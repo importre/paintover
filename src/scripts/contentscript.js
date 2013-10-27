@@ -84,17 +84,18 @@ function mark(node) {
             var data = node.nodeValue.replace(re, "<span class='mark' word='$1'>$1</span>");
             data = data.replace("<span></span>", "");
 
-            // console.log("data");
             if (data != node.nodeValue) {
-                var temp = document.createElement("span");
-                temp.innerHTML = data;
-                // console.log(temp);
-                var alpha = wordListObj[$(temp).find("span.mark").html().toLowerCase()].complete / $$option.maxComplete;
-                var rgba = getRGBA($$option.bgColor, alpha);
-                $(temp).find('span.mark').css("background",rgba);
+                var spanEl = document.createElement("span");
+                spanEl.innerHTML = data;
+                var word =  $(spanEl).find("span.mark").html();
+                if (word) {
+                    var alpha = wordListObj[word.toLowerCase()].complete / $$option.maxComplete;
+                    var rgba = getRGBA($$option.bgColor, alpha);
+                    $(spanEl).find('span.mark').css("background",rgba);
 
-                node.parentNode.insertBefore(temp, node);
-                node.parentNode.removeChild(node);
+                    node.parentNode.insertBefore(spanEl, node);
+                    node.parentNode.removeChild(node);
+                }
             }
         }
     }
@@ -159,6 +160,7 @@ function getRGBA(hex, a) {
 
     return "rgba(" + rgbaList.join(",") + ")";
 }
+<<<<<<< HEAD:contentscript.js
 
 
 
@@ -368,3 +370,5 @@ function focus() {
     updateSelection();
 
 }
+=======
+>>>>>>> 5a7de058d2b80edc827d9e2d44cf996b497db193:src/scripts/contentscript.js

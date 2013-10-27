@@ -1,15 +1,15 @@
-angular.module('paintover', ['ngRoute'])
+angular.module('paintover', ['ngRoute', 'colorpicker.module'])
 	.config(function($routeProvider, $locationProvider) {
 		$routeProvider.
       when('/', {
       	redirectTo : '/vocareg'
       }).
       when('/vocareg', {
-			  templateUrl: chrome.extension.getURL('template/vocaReg.html'),
+			  templateUrl: chrome.extension.getURL('../views/vocaReg.html'),
 			  controller: 'vocaRegCtrl'
 			}).
       when('/etcreg', {
-			  templateUrl: chrome.extension.getURL('template/etcReg.html'),
+			  templateUrl: chrome.extension.getURL('../views/etcReg.html'),
 			  controller: 'etcRegCtrl'
 			});
 	})
@@ -82,7 +82,7 @@ angular.module('paintover', ['ngRoute'])
 				return;
 			}
 			var vocaToSave = {};
-			
+
 			vocaToSave[voca.text] = {
 				'text' : voca.text,
 				'complete' : DEFAULT_COMPLETE_VALUE
@@ -103,6 +103,49 @@ angular.module('paintover', ['ngRoute'])
 
 		$scope.loadVocaList();
 	})
-	.controller('etcRegCtrl',function($scope) {
+    .controller('etcRegCtrl', function ($scope) {
+        var sliderOpts = {
+            min: 5,
+            max: 10,
+            orientation: "horizontal",
+            tooltip: "show",
+            handle: "round",
+            selection: "before"
+        }
 
-	});
+        var slider = $(".compleMaxSlider").slider(sliderOpts);
+        slider.on('slide', $scope.setSlider);
+
+        chrome.storage.sync.get("$$option", function (obj) {
+            $scope.$apply(function () {
+                // default color
+                $scope.options = {
+                    maxComplete: 5,
+                    bgColor: "#ffff00"
+                };
+
+                if (obj.$$option) {
+                    var bgColor = obj.$$option["bgColor"];
+                    if (bgColor) {
+                        $scope.options["bgColor"] = bgColor;
+                    }
+
+                    var maxComplete = obj.$$option["maxComplete"];
+                    if (maxComplete) {
+                        $scope.options["maxComplete"] = maxComplete;
+                        slider.slider('setValue', maxComplete);
+                    }
+                }
+            });
+        });
+
+        $scope.setOptions = function () {
+            chrome.storage.sync.set({"$$option": $scope.options}, function () {
+            });
+        };
+
+        $scope.setSlider = function(event) {
+            $scope.options["maxComplete"] = event.value;
+            $scope.setOptions();
+        }
+    });

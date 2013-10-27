@@ -10,7 +10,7 @@ module.exports = function(grunt) {
                 },
                 files: [{
                     expand:true,
-                    cwd: 'dist/',
+                    cwd: 'dist/src/',
                     src: ['**'],
                     dest: ''
                 }]
@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 
         crx: {
             dist: {
-                src: 'dist/',
+                src: 'dist/src/',
                 dest: 'package/<%= pkg.name %>_<%=pkg.version %>.crx',
                 privateKey: 'cert/key.pem'
             }
@@ -42,27 +42,26 @@ module.exports = function(grunt) {
 
         copy: {
             dist: {
-                files: [{
+                files: [
+                    {
                     cwd: '.',
                     dot: false,
                     dest: 'dist/',
                     src: [
-                        'manifest.json',
-                        'background.js',
-                        'content.css',
-                        'contentscript.js',
-                        'options.html',
-                        'icon.png',
-                        'template/*',
-                        'css/option.css',
-                        'vendor/todc-bootstrap/dist/css/bootstrap.min.css',
-                        'vendor/todc-bootstrap/dist/css/todc-bootstrap.min.css',
-                        'vendor/jquery/jquery.min.js',
-                        'vendor/angular/angular.min.js',
-                        'vendor/angular-route/angular-route.min.js',
-                        'src/paintover-option.js'
+                        'src/manifest.json',
+                        'src/scripts/*',
+                        'src/styles/*',
+                        'src/assets/*',
+                        'src/views/*',
+                        'src/vendor/todc-bootstrap/dist/css/bootstrap.min.css',
+                        'src/vendor/todc-bootstrap/dist/css/todc-bootstrap.min.css',
+                        'src/vendor/jquery/jquery.min.js',
+                        'src/vendor/angular/angular.min.js',
+                        'src/vendor/angular-route/angular-route.min.js',
+                        'src/vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js'
                     ]
-                }]
+                }
+                ]
             }
         }
     });

@@ -1,0 +1,42 @@
+<!doctype html>
+<html ng-app="paintover" ng-csp>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../vendor/todc-bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../vendor/todc-bootstrap/dist/css/todc-bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../vendor/angular-bootstrap-colorpicker/css/colorpicker.css">
+		<link rel="stylesheet" type="text/css" href="../styles/option.css">
+        <link rel="stylesheet" type="text/css" href="../styles/slider.css">
+		<script src="../vendor/jquery/jquery.min.js"></script>
+		<script src="../vendor/angular/angular.min.js"></script>
+		<script src="../vendor/angular-route/angular-route.min.js"></script>
+        <script src="../vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+		<script src="../scripts/paintover-option.js"></script>
+        <script src="../scripts/bootstrap-slider.js"></script>
+		<title>paintover option page</title>
+	</head>
+
+<body>
+	<div class="container" ng-controller="mainCtrl">
+		<div class="header">
+			<h3 class="text-muted">paintover 설정</h3>
+		</div>
+		<div class="row">
+			<div class="col-md-3 option-sidebar">
+				<ul class="nav bs-sidenav">
+					<li ng-class="isActive()">
+					  <a href="#vocareg">단어 등록</a>
+					</li>
+					<li ng-class="isActive()">
+					  <a href="#etcreg">기타 설정</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-9">
+				<div ng-view></div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
