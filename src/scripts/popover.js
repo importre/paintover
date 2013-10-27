@@ -432,9 +432,9 @@ if (!jQuery) { throw new Error("paintover-popover requires jQuery") }
     var content = this.getContent()
 
     $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
-    $tip.find('.popover-content')['html']("<button class='plus'>+</button>")
+    $tip.find('.popover-content')['html']("<span class='glyphicon glyphicon-ok plus'></span>")
 
-    $tip.find('.popover-content button.plus').on('click',function(e) {
+    $tip.find('.popover-content span.plus').on('click',function(e) {
       var key = me.$element.html().toLowerCase();
       e.preventDefault();
       e.stopPropagation();

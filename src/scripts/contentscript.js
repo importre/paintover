@@ -209,7 +209,13 @@ function focus() {
 
     function onMouseDown( event ) {
         //팝오버된것은 무시한다.
-        if($(event.target).parents(".paintover-popover").length>0) return;
+        if($(event.target).parents(".paintover-popover").length > 0) {
+            //약간 문제의 코드...mark.span을 지우는 시기랑 $('mark.span')을 가져오는 시가가 다르다.. 좀 기달려준다. ㅋ
+            setTimeout(function() {
+                updateSelection();    
+            },500);
+            return;
+        };
 
         isClicked = true;
         updateSelection();
@@ -224,6 +230,7 @@ function focus() {
         var currentRegion = { left: Number.MAX_VALUE, top: Number.MAX_VALUE, right: 0, bottom: 0 };
 
         var nodes = getSelectedNodes();
+        selectedRegionList = [];
 
         for( var i = 0, len = nodes.length; i < len; i++ ) {
             var node = nodes[i];
@@ -258,7 +265,6 @@ function focus() {
                 bottom: y+h
             });
         }
-
         // Start repainting if there is a selected region
         if( hasSelection() ) {
             redraw();
@@ -292,7 +298,7 @@ function focus() {
         overlayContext.fillStyle = 'rgba( 0, 0, 0, '+ overlayAlpha +' )';
         overlayContext.fillRect( 0, 0, overlay.width, overlay.height );
 
-        //전체 선택된 단어를 가지고와서 해당 부분을 지운다.
+        //전체 선택된 단어를 가지고와서 해당 부분을 지운다.        
         for (var i = 0; i < selectedRegionList.length; i++) {
             overlayContext.clearRect(
                 selectedRegionList[i].left - window.scrollX - PADDING,
