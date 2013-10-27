@@ -1,7 +1,7 @@
 var DEFAULT_COMPLETE_VALUE = 5;
 
 function onClick(info, tab) {
-    var word = info.selectionText;
+    var word = info.selectionText.toLowerCase();
     var map = {};
     map[word] = {
         'text': word,
@@ -21,6 +21,18 @@ chrome.contextMenus.create({
     contexts: ["selection"],
     onclick: onClick
 });
+
+chrome.contextMenus.create({
+    title: "focus view paintover",
+    contexts: ['page'],
+    onclick: function(info, tab) {
+        var request = {cmd: "focus"};
+        chrome.tabs.sendMessage(tab.id, request, function (response) {
+            console.log(response);
+        });
+    }
+});
+
 
 chrome.extension.onRequest.addListener(
     function (request, sender, sendResponse) {
