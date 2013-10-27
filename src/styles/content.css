@@ -13,6 +13,17 @@ span.mark {
   cursor:pointer;
 }
 
+.paintover-popover span.question:hover {
+  margin-top: 5px;
+  color: red;
+  cursor:pointer;
+}
+
+.paintover-popover span.question {
+  margin-top: 5px;
+  cursor:pointer;
+}
+
 .glyphicon {
   position: relative;
   top:-1;
@@ -26,8 +37,13 @@ span.mark {
 
   font-size: 12px;
 }
+
 .glyphicon-ok:before {
   content: "  \e013  ";
+}
+
+.glyphicon-question:before {
+  content: "  \e085  ";
 }
 
 .glyphicon-asterisk:before {

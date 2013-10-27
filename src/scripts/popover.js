@@ -430,9 +430,12 @@ if (!jQuery) { throw new Error("paintover-popover requires jQuery") }
     var $tip    = this.tip()
     var title   = this.getTitle()
     var content = this.getContent()
+    var tipContents =
+        "<span class='glyphicon glyphicon-ok plus'></span>" +
+      "<span class='glyphicon glyphicon-question question'></span>";
 
     $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
-    $tip.find('.popover-content')['html']("<span class='glyphicon glyphicon-ok plus'></span>")
+    $tip.find('.popover-content')['html'](tipContents)
 
     $tip.find('.popover-content span.plus').on('click',function(e) {
       var key = me.$element.html().toLowerCase();
@@ -454,6 +457,14 @@ if (!jQuery) { throw new Error("paintover-popover requires jQuery") }
       });
 
       me.leave(me);
+    });
+
+    $tip.find('.popover-content span.question').on('click',function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var word = me.$element.html().toLowerCase();
+        var dicUrl = "http://dic.daum.net/search.do?q=" + word;
+        window.open(dicUrl,"_blank");
     });
 
     $tip.on('click',function(e) {
