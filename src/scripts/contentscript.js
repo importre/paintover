@@ -236,6 +236,9 @@ function focus() {
             // Fetch the screen coordinates for this element
             var position = getScreenPosition( node );
 
+            if (position.x == 0 && position.y == 0)
+                continue;
+
             var x = position.x,
                 y = position.y,
                 w = node.offsetWidth,
