@@ -9,10 +9,25 @@ var DEFAULT_COMPLETE_VALUE = 5;
 window.onload = function () {
     init();
     addDomModifiedEvent();
+    startNotificationAlarm();
 };
 
 var init = function () {
     skipNodeList = ["style", "script", "object", "form", "head", "input", "fieldset"];
+    paintover();
+};
+
+// TODO: 옵션을 통해 사용자가 스킵할 사이트를 등록?!
+function isSiteSkip() {
+    if (/(facebook.com)$/.test(window.location.hostname))
+        return true;
+    return false;
+}
+
+function paintover() {
+    if (isSiteSkip()) {
+        return;
+    }
 
     chrome.extension.sendRequest(
         {
@@ -21,9 +36,9 @@ var init = function () {
         }, function (response) {
             wordListObj = response.data;
             $$option = response.data['$$option'] || {
-                maxComplete : DEFAULT_COMPLETE_VALUE,
-                bgColor : "#ffff00",
-                fgColor : "#ff0000"
+                maxComplete: DEFAULT_COMPLETE_VALUE,
+                bgColor: "#ffff00",
+                fgColor: "#ff0000"
             };
 
             wordList = Object.keys(response.data);
@@ -35,7 +50,16 @@ var init = function () {
             mark(document.body);
         }
     );
-};
+}
+
+function startNotificationAlarm() {
+    chrome.extension.sendRequest({
+            method: "notification",
+            key: "alarm"
+        }, function (response) {
+        }
+    );
+}
 
 function isHtml(text) {
     return text.indexOf("<meta ") >= 0 ||
@@ -52,19 +76,19 @@ function isSpanMarkNode(node) {
     if (!node || (node.nodeType != Node.ELEMENT_NODE)) {
         return false;
     }
-    if(node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark"){
-        if(wordListObj[$(node).html().toLowerCase()] === undefined){
-            $(node).css("background",0);
+    if (node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark") {
+        if (wordListObj[$(node).html().toLowerCase()] === undefined) {
+            $(node).css("background", 0);
             $(node).removeClass('mark');
-            $(node).css("color","");
+            $(node).css("color", "");
             $(node).popover('destroy');
             return true;
         }
         var alpha = wordListObj[$(node).html().toLowerCase()].complete / $$option.maxComplete;
         var bgColor = getRGBA($$option.bgColor, alpha);
         var fgColor = getRGBA($$option.fgColor, 1.0);
-        $(node).css("background",bgColor);
-        $(node).css("color",fgColor);
+        $(node).css("background", bgColor);
+        $(node).css("color", fgColor);
     }
     return node.tagName.toLowerCase() == "span" && node.getAttribute("class") == "mark";
 }
@@ -91,14 +115,14 @@ function mark(node) {
             if (data != node.nodeValue) {
                 var spanEl = document.createElement("span");
                 spanEl.innerHTML = data;
-                var word =  $(spanEl).find("span.mark").html();
+                var word = $(spanEl).find("span.mark").html();
                 if (word) {
                     var alpha = wordListObj[word.toLowerCase()].complete / $$option.maxComplete;
                     var bgColor = getRGBA($$option.bgColor, alpha);
                     var fgColor = getRGBA($$option.fgColor, 1.0);
                     var markNode = $(spanEl);
-                    markNode.find('span.mark').css("background",bgColor);
-                    markNode.find('span.mark').css("color",fgColor);
+                    markNode.find('span.mark').css("background", bgColor);
+                    markNode.find('span.mark').css("color", fgColor);
 
                     node.parentNode.insertBefore(spanEl, node);
                     node.parentNode.removeChild(node);
@@ -115,7 +139,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         sendResponse(response);
     }
 
-    if(request.cmd == "focus"){
+    if (request.cmd == "focus") {
         focus();
     }
 });
@@ -127,9 +151,9 @@ function addDomModifiedEvent() {
             init();
 
             $('span.mark').popover({
-                trigger : 'hover',
-                content : 'dummy value',
-                container : 'body'
+                trigger: 'hover',
+                content: 'dummy value',
+                container: 'body'
             });
         }, false);
     }
@@ -141,28 +165,28 @@ function getRGBA(hex, a) {
         args = arguments.length,
         r,
         parseHex = function (h) {
-          return parseInt(h, 16);
+            return parseInt(h, 16);
         };
 
-        if (typeof hex === str) {
-                r = hex.substr(hex.indexOf("#") + 1);
-                var threeDigits = r.length === 3;
-                r = parseHex(r);
-                threeDigits &&
-                        (r = (((r & 0xF00) * 0x1100) | ((r & 0xF0) * 0x110) | ((r & 0xF) * 0x11)));
-        }
-        
-        
-        g = (r & 0xFF00) / 0x100;
-        b =  r & 0xFF;
-        r =  r >>> 0x10;
+    if (typeof hex === str) {
+        r = hex.substr(hex.indexOf("#") + 1);
+        var threeDigits = r.length === 3;
+        r = parseHex(r);
+        threeDigits &&
+        (r = (((r & 0xF00) * 0x1100) | ((r & 0xF0) * 0x110) | ((r & 0xF) * 0x11)));
+    }
+
+
+    g = (r & 0xFF00) / 0x100;
+    b = r & 0xFF;
+    r = r >>> 0x10;
 
     var rgbaList = [
-            typeof r === str && parseHex(r) || r,
-            typeof g === str && parseHex(g) || g,
-            typeof b === str && parseHex(b) || b,
-            (typeof a !== str && typeof a !== "number") && 1 ||
-                    typeof a === str && parseFloat(a) || a
+        typeof r === str && parseHex(r) || r,
+        typeof g === str && parseHex(g) || g,
+        typeof b === str && parseHex(b) || b,
+        (typeof a !== str && typeof a !== "number") && 1 ||
+            typeof a === str && parseFloat(a) || a
     ];
 
     return "rgba(" + rgbaList.join(",") + ")";
@@ -181,10 +205,10 @@ function focus() {
         overlayAlpha = 0,
 
     // Reference to the redraw animation so it can be cancelled
-    redrawAnimation,
+        redrawAnimation,
 
     // 선택된 단어들의 regin데이터 목록
-    selectedRegionList = [];
+        selectedRegionList = [];
 
     // Currently pressed down key modifiers
     keyModifiers = { ctrl: false, shift: false, alt: false, cmd: false };
@@ -195,8 +219,8 @@ function focus() {
     //클릭여부 처음엔 클릭안했으니 false 추후에 클릭하면 canvas삭제
     isClicked = false;
 
-    overlay = document.createElement( 'canvas' );
-    overlayContext = overlay.getContext( '2d' );
+    overlay = document.createElement('canvas');
+    overlayContext = overlay.getContext('2d');
 
     // Place the canvas on top of everything
     overlay.style.position = 'fixed';
@@ -208,20 +232,21 @@ function focus() {
 
     onWindowResize();
 
-    function onKeyPress( event ) {
-        if(event.cancelable) isClicked = true;
+    function onKeyPress(event) {
+        if (event.cancelable) isClicked = true;
         updateSelection();
     }
 
-    function onMouseDown( event ) {
+    function onMouseDown(event) {
         //팝오버된것은 무시한다.
-        if($(event.target).parents(".paintover-popover").length > 0) {
+        if ($(event.target).parents(".paintover-popover").length > 0) {
             //약간 문제의 코드...mark.span을 지우는 시기랑 $('mark.span')을 가져오는 시가가 다르다.. 좀 기달려준다. ㅋ
-            setTimeout(function() {
-                updateSelection();    
-            },500);
+            setTimeout(function () {
+                updateSelection();
+            }, 500);
             return;
-        };
+        }
+        ;
 
         isClicked = true;
         updateSelection();
@@ -238,16 +263,16 @@ function focus() {
         var nodes = getSelectedNodes();
         selectedRegionList = [];
 
-        for( var i = 0, len = nodes.length; i < len; i++ ) {
+        for (var i = 0, len = nodes.length; i < len; i++) {
             var node = nodes[i];
 
             // Select parents of text nodes that have contents
-            if( node.nodeName === '#text' && node.nodeValue.trim() ) {
+            if (node.nodeName === '#text' && node.nodeValue.trim()) {
                 node = node.parentNode;
             }
 
             // Fetch the screen coordinates for this element
-            var position = getScreenPosition( node );
+            var position = getScreenPosition(node);
 
             if (position.x == 0 && position.y == 0)
                 continue;
@@ -261,21 +286,21 @@ function focus() {
             // 2. offsetWidth works
             // 3. Element is larger than zero pixels
             // 4. Element is not <br>
-            if( node && typeof x === 'number' && typeof w === 'number' && ( w > 0 || h > 0 ) && !node.nodeName.match( /^br$/gi ) ) {
-                currentRegion.left = Math.min( currentRegion.left, x );
-                currentRegion.top = Math.min( currentRegion.top, y );
-                currentRegion.right = Math.max( currentRegion.right, x + w );
-                currentRegion.bottom = Math.max( currentRegion.bottom, y + h );
+            if (node && typeof x === 'number' && typeof w === 'number' && ( w > 0 || h > 0 ) && !node.nodeName.match(/^br$/gi)) {
+                currentRegion.left = Math.min(currentRegion.left, x);
+                currentRegion.top = Math.min(currentRegion.top, y);
+                currentRegion.right = Math.max(currentRegion.right, x + w);
+                currentRegion.bottom = Math.max(currentRegion.bottom, y + h);
             }
             selectedRegionList.push({
                 left: x,
                 top: y,
-                right: x+w,
-                bottom: y+h
+                right: x + w,
+                bottom: y + h
             });
         }
         // Start repainting if there is a selected region
-        if( hasSelection() ) {
+        if (hasSelection()) {
             redraw();
         }
     }
@@ -285,11 +310,11 @@ function focus() {
         return (spanMarkLength > 0);
     }
 
-    function onWindowResize( event ) {
+    function onWindowResize(event) {
         overlay.width = window.innerWidth;
         overlay.height = window.innerHeight;
     }
-    
+
     function getSelectedNodes() {
         return $("span.mark").get();
     }
@@ -303,9 +328,9 @@ function focus() {
         var _hasSelection = hasSelection();
 
         // Reset to a solid (less opacity) overlay fill
-        overlayContext.clearRect( 0, 0, overlay.width, overlay.height );
-        overlayContext.fillStyle = 'rgba( 0, 0, 0, '+ overlayAlpha +' )';
-        overlayContext.fillRect( 0, 0, overlay.width, overlay.height );
+        overlayContext.clearRect(0, 0, overlay.width, overlay.height);
+        overlayContext.fillStyle = 'rgba( 0, 0, 0, ' + overlayAlpha + ' )';
+        overlayContext.fillRect(0, 0, overlay.width, overlay.height);
 
         //전체 선택된 단어를 가지고와서 해당 부분을 지운다.        
         for (var i = 0; i < selectedRegionList.length; i++) {
@@ -315,37 +340,39 @@ function focus() {
                 ( selectedRegionList[i].right - selectedRegionList[i].left ) + ( PADDING * 2 ),
                 ( selectedRegionList[i].bottom - selectedRegionList[i].top ) + ( PADDING * 2 )
             );
-            
-        };
+
+        }
+        ;
 
         // Fade in if there's a valid selection...
-        if( _hasSelection ) {
+        if (_hasSelection) {
             overlayAlpha += ( OPACITY - overlayAlpha ) * 0.08;
         }
         // ... otherwise fade out
         else {
-            overlayAlpha = Math.max( ( overlayAlpha * 0.85 ) - 0.02, 0 );
+            overlayAlpha = Math.max(( overlayAlpha * 0.85 ) - 0.02, 0);
         }
 
         // Ensure there is no overlap
-        cancelAnimationFrame( redrawAnimation );
+        cancelAnimationFrame(redrawAnimation);
 
         // 계속해서 그린다. 재귀호출 부분. 클릭하기 전이나 선택된게 없을때까지
-        if( isClicked === false && _hasSelection && overlayAlpha > 0 ) {
+        if (isClicked === false && _hasSelection && overlayAlpha > 0) {
             // Append the overlay if it isn't already in the DOM
-            if( !overlay.parentNode ) {
-                document.body.appendChild( overlay );
-                document.addEventListener( 'mousedown', onMouseDown, false );
-                document.addEventListener( 'keydown', onKeyPress, false );
-            };
+            if (!overlay.parentNode) {
+                document.body.appendChild(overlay);
+                document.addEventListener('mousedown', onMouseDown, false);
+                document.addEventListener('keydown', onKeyPress, false);
+            }
+            ;
 
             // Stage a new animation frame
-            redrawAnimation = requestAnimationFrame( redraw );
+            redrawAnimation = requestAnimationFrame(redraw);
         }
         else {
-            document.body.removeChild( overlay );
-            document.removeEventListener('mousedown',onMouseDown,false);
-            document.removeEventListener('keydown',onKeyPress,false);
+            document.body.removeChild(overlay);
+            document.removeEventListener('mousedown', onMouseDown, false);
+            document.removeEventListener('keydown', onKeyPress, false);
         }
 
     }
@@ -354,15 +381,15 @@ function focus() {
      * Gets the x/y screen position of the target node, source:
      * http://www.quirksmode.org/js/findpos.html
      */
-    function getScreenPosition( node ) {
+    function getScreenPosition(node) {
         var x = document.documentElement.offsetLeft,
             y = document.documentElement.offsetTop;
 
-        if ( node.offsetParent ) {
+        if (node.offsetParent) {
             do {
                 x += node.offsetLeft;
                 y += node.offsetTop;
-            } while ( node = node.offsetParent );
+            } while (node = node.offsetParent);
         }
 
         return { x: x, y: y };

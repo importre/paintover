@@ -1,7 +1,7 @@
 {
     "name": "paintover",
     "manifest_version": 2,
-    "version": "0.0.1",
+    "version": "0.0.2",
 
     "description": "모르는 단어를 미리 등록해두고 웹 서핑할 때 해당 단어가 나오면 하이라이트 해주는 크롬 확장 프로그램",
     "background": {
@@ -16,6 +16,8 @@
         "contextMenus",
         "storage",
         "webRequest",
+        "notifications",
+        "alarms",
         "*://*.google.com/"
     ],
     "options_page": "views/options.html",

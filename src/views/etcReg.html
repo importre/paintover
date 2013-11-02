@@ -1,10 +1,10 @@
 <div ng-controller="etcRegCtrl">
     <div class="page-header">
-        <h2>paintover 기타 옵션</h2>
+        <h2>기타 설정</h2>
     </div>
     <div>
         <div>
-            <h3>하이라이트 설정</h3>
+            <h3>1. 하이라이트 설정</h3>
 
             <div>
             <span class="highlight-example" ng-model="options"
@@ -26,8 +26,22 @@
             </div>
         </div>
         <div>
-            <h3>외운정도 최대치 (최소: 5)</h3>
-            <input class="compleMaxSlider" type="text" value="">
+            <h3>2. 외운정도 최대치 (최소: 5)</h3>
+
+            <p>설정한 만큼 하이라이트 된 단어를 체크해야 하이라이트가 사라집니다.</p>
+            <input class="completeMaxSlider" type="text" value="">
+        </div>
+        <div>
+            <h3>3. 알림 카드 노출 주기 (주기: 분)</h3>
+
+            <p>등록된 단어들 중 하나를 무작위로 추출하여 주기적으로 알려줍니다.</p>
+            <label>
+                <input class="notiPeriodSwitch" type="checkbox"
+                       ng-checked="onCheckedNoti(options.notiChecked)"
+                       ng-model="options.notiChecked">
+                알림 카드 사용 여부
+            </label>
+            <input class="notiPeriodSlider" type="text" value="">
         </div>
     </div>
 </div>
