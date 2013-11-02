@@ -1,6 +1,7 @@
 var DEFAULT_COMPLETE_VALUE = 5;
 var prevNotiId = null;
 var prevAlarmTime = null;
+var daumDictUrl = "http://dic.daum.net/search.do?q=";
 
 function onClick(info, tab) {
     var word = info.selectionText.toLowerCase();
@@ -117,20 +118,35 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
         if (list.length > 0) {
             notiWord = list[parseInt(Math.random() * list.length)];
 
-            var notiId = "paintover"
-            var notiOpt = {
-                type: "basic",
-                title: "Paint Over",
-                message: ">>> " + notiWord,
-                iconUrl: "assets/icon_128.png",
-                buttons: [
-                    {title: "다음 사전에서 '" + notiWord + "' 뜻 보기"}
-                ]
-            }
+            $.get(daumDictUrl + notiWord).done(function (data) {
+                var re = /<[^>]+class\s*=\s*"\s*?tit_searchfd\s*">([^>]+?)<\/h4>(?:.|\n|\r)*?class="\s*link_txt\s*">([^>]+?)<\/a>(?:.|\n|\r)*?class="\s*txt_means_[^"]+?\s*">([^>]+?)<\/div>/g;
+                var m = re.exec(data);
+                if (m && m.length > 3) {
+                    var notiId = "paintover"
+                    var notiOpt = {
+                        type: "basic",
+                        title: "등록된 단어: " + notiWord,
+                        message: "[ " + m[2] + " ]" + "\n" + m[3],
+                        iconUrl: "assets/icon_128.png",
+                        buttons: [
+                            {title: "다음 사전에서 자세히 보기"}
+                        ]
+                    }
+                }
 
-            chrome.notifications.create(notiId, notiOpt, function (notificationId) {
-                prevNotiId = notificationId;
+                chrome.notifications.create(notiId, notiOpt, function (notificationId) {
+                    prevNotiId = notificationId;
+                });
             });
+//
+//            var xhr = new XMLHttpRequest();
+//            xhr.open("GET", daumDictUrl + notiWord, true);
+//            xhr.onreadystatechange = function () {
+//                if (xhr.readyState == 4) {
+//                    console.log(xhr.responseText);
+//                }
+//            }
+//            xhr.send();
         }
     });
 });
@@ -145,7 +161,7 @@ chrome.pageAction.onClicked.addListener(function (tab) {
 
 chrome.notifications.onButtonClicked.addListener(function (notificationId, buttonIndex) {
     if ("paintover" === notificationId && 0 == buttonIndex) {
-        var dicUrl = "http://dic.daum.net/search.do?q=" + notiWord;
+        var dicUrl = daumDictUrl + notiWord;
         window.open(dicUrl, "_blank");
     }
 });

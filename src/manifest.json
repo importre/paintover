@@ -5,7 +5,7 @@
 
     "description": "모르는 단어를 미리 등록해두고 웹 서핑할 때 해당 단어가 나오면 하이라이트 해주는 크롬 확장 프로그램",
     "background": {
-        "scripts": ["scripts/background.js"]
+        "scripts": ["scripts/background.js", "vendor/jquery/jquery.min.js"]
     },
     "page_action": {
         "default_icon": "assets/icon.png",
@@ -18,7 +18,8 @@
         "webRequest",
         "notifications",
         "alarms",
-        "*://*.google.com/"
+        "*://*.google.com/",
+        "*://*.dic.daum.net/"
     ],
     "options_page": "views/options.html",
     "content_scripts": [
