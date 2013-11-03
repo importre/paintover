@@ -57,6 +57,7 @@ module.exports = function(grunt) {
                         "src/fonts/glyphicons-halflings-regular.svg",
                         "src/fonts/glyphicons-halflings-regular.ttf",
                         "src/fonts/glyphicons-halflings-regular.woff",
+                        'src/vendor/todc-bootstrap/dist/img/checkmark.png',
                         'src/vendor/todc-bootstrap/dist/css/bootstrap.min.css',
                         'src/vendor/todc-bootstrap/dist/css/todc-bootstrap.min.css',
                         'src/vendor/jquery/jquery.min.js',

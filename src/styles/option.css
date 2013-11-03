@@ -31,3 +31,11 @@ body {
 .highlight-example {
     font-size: 40px;
 }
+
+input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked::after, .checkbox-inline input[type="checkbox"]:checked::after {
+    position: absolute;
+    top: -6px;
+    left: -5px;
+    display: block;
+    content: url(../vendor/todc-bootstrap/dist/img/checkmark.png)
+}
