@@ -129,7 +129,8 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
                         message: "[ " + m[2] + " ]" + "\n" + m[3],
                         iconUrl: "assets/icon_128.png",
                         buttons: [
-                            {title: "다음 사전에서 자세히 보기"}
+                            {title: "다음 사전에서 자세히 보기"},
+                            {title: "설정으로 이동"}
                         ]
                     }
                 }
@@ -138,15 +139,6 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
                     prevNotiId = notificationId;
                 });
             });
-//
-//            var xhr = new XMLHttpRequest();
-//            xhr.open("GET", daumDictUrl + notiWord, true);
-//            xhr.onreadystatechange = function () {
-//                if (xhr.readyState == 4) {
-//                    console.log(xhr.responseText);
-//                }
-//            }
-//            xhr.send();
         }
     });
 });
@@ -160,8 +152,17 @@ chrome.pageAction.onClicked.addListener(function (tab) {
 });
 
 chrome.notifications.onButtonClicked.addListener(function (notificationId, buttonIndex) {
-    if ("paintover" === notificationId && 0 == buttonIndex) {
-        var dicUrl = daumDictUrl + notiWord;
-        window.open(dicUrl, "_blank");
+    if ("paintover" === notificationId) {
+        switch (buttonIndex) {
+            case 0:
+                var dicUrl = daumDictUrl + notiWord;
+                window.open(dicUrl, "_blank");
+                break;
+            case 1:
+                window.open("views/options.html#/etcreg", "_blank");
+                break;
+            default:
+                break;
+        }
     }
 });
